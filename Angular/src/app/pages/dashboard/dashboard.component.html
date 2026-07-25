@@ -1,0 +1,88 @@
+<div class="container">
+
+  <h2 class="mb-4">Attendance Dashboard</h2>
+
+  <div class="cards">
+
+    <mat-card class="card">
+      <mat-card-title>Total Employees</mat-card-title>
+      <mat-card-content>
+        <h1>{{ dashboard?.totalEmployees }}</h1>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card">
+      <mat-card-title>Active Employees</mat-card-title>
+      <mat-card-content>
+        <h1>{{ dashboard?.activeEmployees }}</h1>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card">
+      <mat-card-title>Checked In</mat-card-title>
+      <mat-card-content>
+        <h1>{{ dashboard?.checkedIn }}</h1>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card">
+      <mat-card-title>Checked Out</mat-card-title>
+      <mat-card-content>
+        <h1>{{ dashboard?.checkedOut }}</h1>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card">
+      <mat-card-title>Absent</mat-card-title>
+      <mat-card-content>
+        <h1>{{ dashboard?.absent }}</h1>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <mat-card class="mt-4">
+
+    <mat-card-title>
+      Today's Attendance
+    </mat-card-title>
+
+    <table mat-table [dataSource]="todayAttendance" class="mat-elevation-z2 w-100">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Employee</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.name }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="checkInTime">
+        <th mat-header-cell *matHeaderCellDef>Check In</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.checkInTime | date:'shortTime' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="checkOutTime">
+        <th mat-header-cell *matHeaderCellDef>Check Out</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.checkOutTime ? (row.checkOutTime | date:'shortTime') : '-' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="workingHours">
+        <th mat-header-cell *matHeaderCellDef>Working Hours</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.workingHours ?? '-' }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    </table>
+
+  </mat-card>
+
+</div>

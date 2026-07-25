@@ -1,0 +1,119 @@
+<div class="container">
+
+  <div class="header">
+
+    <h2>Employees</h2>
+
+    <button
+      mat-raised-button
+      color="primary"
+      routerLink="/employees/add">
+      <mat-icon>add</mat-icon>
+      Add Employee
+    </button>
+
+  </div>
+
+  <mat-card>
+
+    <table
+      mat-table
+      [dataSource]="employees"
+      class="mat-elevation-z2 w-100">
+
+      <!-- Name -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>
+          Name
+        </th>
+
+        <td mat-cell *matCellDef="let employee">
+          {{ employee.name }}
+        </td>
+      </ng-container>
+
+      <!-- Salary -->
+      <ng-container matColumnDef="salary">
+        <th mat-header-cell *matHeaderCellDef>
+          Salary
+        </th>
+
+        <td mat-cell *matCellDef="let employee">
+          {{ employee.salary | number:'1.2-2' }}
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>
+          Status
+        </th>
+
+        <td mat-cell *matCellDef="let employee">
+
+          <span
+            class="status active"
+            *ngIf="employee.isActive">
+            Active
+          </span>
+
+          <span
+            class="status inactive"
+            *ngIf="!employee.isActive">
+            Inactive
+          </span>
+
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+
+        <th mat-header-cell *matHeaderCellDef>
+          Actions
+        </th>
+
+        <td mat-cell *matCellDef="let employee">
+
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="edit(employee.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button
+            *ngIf="employee.isActive"
+            mat-icon-button
+            color="warn"
+            (click)="deactivate(employee.id)">
+            <mat-icon>block</mat-icon>
+          </button>
+
+          <button
+            *ngIf="!employee.isActive"
+            mat-icon-button
+            color="accent"
+            (click)="activate(employee.id)">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+
+        </td>
+
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns">
+      </tr>
+
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+
+    </table>
+
+  </mat-card>
+
+</div>

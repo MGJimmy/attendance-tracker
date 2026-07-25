@@ -1,0 +1,78 @@
+<mat-toolbar color="primary">
+
+  <button
+    mat-icon-button
+    (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span class="title">
+    Attendance Tracker
+  </span>
+
+</mat-toolbar>
+
+<mat-sidenav-container class="container">
+
+  <mat-sidenav
+    #drawer
+    mode="side"
+    opened>
+
+    <mat-nav-list>
+
+      <a
+        mat-list-item
+        routerLink="/dashboard"
+        routerLinkActive="active">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/employees"
+        routerLinkActive="active">
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matListItemTitle>Employees</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/attendance/check-in"
+        routerLinkActive="active">
+        <mat-icon matListItemIcon>login</mat-icon>
+        <span matListItemTitle>Check In</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/attendance/history"
+        routerLinkActive="active">
+        <mat-icon matListItemIcon>history</mat-icon>
+        <span matListItemTitle>History</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/attendance/report"
+        routerLinkActive="active">
+        <mat-icon matListItemIcon>assessment</mat-icon>
+        <span matListItemTitle>Reports</span>
+      </a>
+
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+    <div class="content">
+
+      <router-outlet></router-outlet>
+
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

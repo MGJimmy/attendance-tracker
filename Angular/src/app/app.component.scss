@@ -1,0 +1,46 @@
+.container {
+  height: calc(100vh - 64px);
+}
+
+mat-sidenav {
+  width: 250px;
+  border-right: 1px solid #e0e0e0;
+}
+
+.content {
+  padding: 24px;
+}
+
+.title {
+  margin-left: 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.active {
+  background: rgba(25, 118, 210, 0.12);
+  border-radius: 8px;
+}
+
+mat-nav-list a {
+  margin: 6px 10px;
+  border-radius: 8px;
+}
+
+mat-icon {
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    height: calc(100vh - 56px);
+  }
+
+  mat-sidenav {
+    width: 220px;
+  }
+
+  .content {
+    padding: 16px;
+  }
+}
