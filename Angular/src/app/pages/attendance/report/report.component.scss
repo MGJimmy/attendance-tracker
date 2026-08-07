@@ -1,0 +1,184 @@
+.reports-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+}
+
+// ===========================
+// Filter Card
+// ===========================
+
+.filter-card {
+  border-radius: 12px;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.filter-form mat-form-field {
+  flex: 1 1 260px;
+  min-width: 220px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.actions button {
+  min-width: 120px;
+  height: 56px;
+}
+
+// ===========================
+// Summary Cards
+// ===========================
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 20px;
+}
+
+.summary-card {
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  transition: .25s ease;
+  cursor: default;
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+}
+
+.summary-card h3 {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.summary-card span {
+  display: block;
+  margin-top: 14px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #1976d2;
+  word-break: break-word;
+}
+
+// ===========================
+// Table
+// ===========================
+
+.table-card {
+  border-radius: 12px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.report-table thead {
+  background: #1976d2;
+}
+
+.report-table th {
+  color: white;
+  font-weight: 600;
+  padding: 16px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.report-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #ececec;
+  font-size: 14px;
+}
+
+.report-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.report-table tbody tr:hover {
+  background: #eaf4ff;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+  padding: 32px;
+  font-style: italic;
+}
+
+// ===========================
+// Material
+// ===========================
+
+mat-card-title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+mat-card-subtitle {
+  margin-top: 4px;
+  color: #777;
+}
+
+mat-card-content {
+  margin-top: 16px;
+}
+
+// ===========================
+// Responsive
+// ===========================
+
+@media (max-width: 768px) {
+
+  .reports-container {
+    padding: 16px;
+  }
+
+  .filter-form {
+    flex-direction: column;
+  }
+
+  .filter-form mat-form-field {
+    width: 100%;
+  }
+
+  .actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions button {
+    width: 100%;
+    height: 48px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card span {
+    font-size: 26px;
+  }
+}

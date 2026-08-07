@@ -1,1 +1,223 @@
-<p>report works!</p>
+<div class="reports-container">
+
+  <!-- Filters -->
+  <mat-card class="filter-card">
+
+    <mat-card-header>
+      <mat-card-title>Attendance Reports</mat-card-title>
+      <mat-card-subtitle>
+        Filter attendance report by employee and date range
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <form
+        [formGroup]="form"
+        class="filter-form">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Employee</mat-label>
+
+          <mat-select formControlName="employeeId">
+            <mat-option [value]="null">
+              All Employees
+            </mat-option>
+
+            <mat-option
+              *ngFor="let employee of employees"
+              [value]="employee.id">
+
+              {{ employee.name }}
+
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>From Date</mat-label>
+
+          <input
+            matInput
+            [matDatepicker]="fromPicker"
+            formControlName="from">
+
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="fromPicker">
+          </mat-datepicker-toggle>
+
+          <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>To Date</mat-label>
+
+          <input
+            matInput
+            [matDatepicker]="toPicker"
+            formControlName="to">
+
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="toPicker">
+          </mat-datepicker-toggle>
+
+          <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+
+        <div class="actions">
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="search()">
+
+            Search
+
+          </button>
+
+          <button
+            mat-stroked-button
+            color="warn"
+            type="button"
+            (click)="clear()">
+
+            Clear
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+
+  <!-- Summary -->
+  <div
+    class="summary-grid"
+    *ngIf="report">
+
+    <mat-card class="summary-card">
+      <h3>Working Days</h3>
+      <span>{{ report.workingDays }}</span>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <h3>Completed Days</h3>
+      <span>{{ report.completedDays }}</span>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <h3>Open Days</h3>
+      <span>{{ report.openDays }}</span>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <h3>Total Hours</h3>
+      <span>{{ report.totalWorkingHours }}</span>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <h3>Average Hours</h3>
+      <span>{{ report.averageWorkingHours }}</span>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <h3>Longest Shift</h3>
+      <span>{{ report.longestShift ?? '-' }}</span>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <h3>Shortest Shift</h3>
+      <span>{{ report.shortestShift ?? '-' }}</span>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <h3>Earliest Check In</h3>
+      <span>
+        {{ report.earliestCheckIn ? (report.earliestCheckIn | date:'short') : '-' }}
+      </span>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <h3>Latest Check Out</h3>
+      <span>
+        {{ report.latestCheckOut ? (report.latestCheckOut | date:'short') : '-' }}
+      </span>
+    </mat-card>
+
+  </div>
+
+
+  <!-- Details -->
+  <mat-card
+    class="table-card"
+    *ngIf="report">
+
+    <mat-card-header>
+      <mat-card-title>Attendance Details</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div class="table-responsive">
+
+        <table class="report-table">
+
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Date</th>
+              <th>Check In</th>
+              <th>Check Out</th>
+              <th>Working Hours</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr
+              *ngFor="let row of report.records">
+
+              <td>{{ row.employeeName }}</td>
+
+              <td>
+                {{ row.attendanceDate | date:'yyyy-MM-dd' }}
+              </td>
+
+              <td>
+                {{ row.checkInTime ? (row.checkInTime | date:'shortTime') : '-' }}
+              </td>
+
+              <td>
+                {{ row.checkOutTime ? (row.checkOutTime | date:'shortTime') : '-' }}
+              </td>
+
+              <td>
+                {{ row.workingHours ?? '-' }}
+              </td>
+
+            </tr>
+
+            <tr *ngIf="report.records.length === 0">
+              <td colspan="5" class="empty">
+                No attendance records found.
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </mat-card-content>
+
+  </mat-card>
+
+</div>

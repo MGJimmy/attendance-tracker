@@ -54,6 +54,10 @@ export class EmployeeListComponent implements OnInit {
     this.router.navigate(['/employees/edit', id]);
   }
 
+  add(): void {
+    this.router.navigate(['/employees/add']);
+  }
+
   activate(id: number): void {
     this.employeeService.activate(id).subscribe({
       next: () => {

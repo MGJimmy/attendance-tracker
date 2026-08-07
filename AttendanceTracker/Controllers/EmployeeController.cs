@@ -227,13 +227,20 @@ public class EmployeeController : ControllerBase
         {
             EmployeeId = payload.EmployeeId,
             AttendanceDate = today,
-            CheckInTime = DateTime.Now
+            CheckInTime = DateTime.UtcNow
         };
 
         await _appDBContext.EmployeeAttendances.AddAsync(attendance);
         await _appDBContext.SaveChangesAsync();
 
-        return Ok(attendance);
+        return Ok(new
+        {
+            attendance.EmployeeId,
+            attendance.Employee.Name,
+            attendance.CheckInTime,
+            attendance.CheckOutTime,
+            WorkingHours = attendance.CheckOutTime - attendance.CheckInTime
+        });
     }
 
     #endregion
@@ -257,7 +264,7 @@ public class EmployeeController : ControllerBase
         if (attendance.CheckOutTime != null)
             return BadRequest("Employee already checked out.");
 
-        attendance.CheckOutTime = DateTime.Now;
+        attendance.CheckOutTime = DateTime.UtcNow;
 
         await _appDBContext.SaveChangesAsync();
 
@@ -335,35 +342,40 @@ public class EmployeeController : ControllerBase
 
     #region Attendance Between Dates
 
-    [HttpPost("report")]
-    public async Task<IActionResult> Report(AttendanceReportDTO payload)
+    [HttpPost("history")]
+    public async Task<IActionResult> History([FromBody] AttendanceHistoryDTO payload)
     {
-        var query = _appDBContext.EmployeeAttendances
-            .Include(x => x.Employee)
-            .AsQueryable();
+        IQueryable<EmployeeAttendance> query = _appDBContext.EmployeeAttendances
+            .Include(x => x.Employee);
 
         if (payload.EmployeeId.HasValue)
-            query = query.Where(x => x.EmployeeId == payload.EmployeeId);
+        {
+            query = query.Where(x => x.EmployeeId == payload.EmployeeId.Value);
+        }
 
         if (payload.From.HasValue)
-            query = query.Where(x => x.AttendanceDate >= payload.From);
+        {
+            query = query.Where(x => x.AttendanceDate >= payload.From.Value);
+        }
 
         if (payload.To.HasValue)
-            query = query.Where(x => x.AttendanceDate <= payload.To);
+        {
+            query = query.Where(x => x.AttendanceDate <= payload.To.Value);
+        }
 
         var result = await query
             .OrderByDescending(x => x.AttendanceDate)
+            .ThenBy(x => x.Employee.Name)
             .Select(x => new
             {
                 x.EmployeeId,
-                x.Employee.Name,
+                Name = x.Employee.Name,
                 x.AttendanceDate,
                 x.CheckInTime,
                 x.CheckOutTime,
-                WorkingHours =
-                    x.CheckOutTime == null
-                        ? null
-                        : x.CheckOutTime - x.CheckInTime
+                WorkingHours = x.CheckOutTime == null
+                    ? null
+                    : x.CheckOutTime - x.CheckInTime
             })
             .ToListAsync();
 
@@ -371,6 +383,107 @@ public class EmployeeController : ControllerBase
     }
 
     #endregion
+
+    #region Reports
+
+    [HttpPost("report")]
+    public async Task<IActionResult> Report([FromBody] AttendanceReportDTO payload)
+    {
+        IQueryable<EmployeeAttendance> query =
+            _appDBContext.EmployeeAttendances
+                .Include(x => x.Employee);
+
+        if (payload.EmployeeId.HasValue)
+        {
+            query = query.Where(x =>
+                x.EmployeeId == payload.EmployeeId.Value);
+        }
+
+        if (payload.From.HasValue)
+        {
+            query = query.Where(x =>
+                x.AttendanceDate >= payload.From.Value);
+        }
+
+        if (payload.To.HasValue)
+        {
+            query = query.Where(x =>
+                x.AttendanceDate <= payload.To.Value);
+        }
+
+        var attendances = await query
+            .OrderByDescending(x => x.AttendanceDate)
+            .ThenBy(x => x.Employee.Name)
+            .ToListAsync();
+
+        var rows = attendances
+            .Select(x => new AttendanceReportRowDTO
+            {
+                EmployeeId = x.EmployeeId,
+                EmployeeName = x.Employee.Name,
+                AttendanceDate = x.AttendanceDate,
+                CheckInTime = x.CheckInTime,
+                CheckOutTime = x.CheckOutTime,
+                WorkingHours = x.WorkingHours
+            })
+            .ToList();
+
+        var completed = rows
+            .Where(x => x.WorkingHours.HasValue)
+            .ToList();
+
+        var totalWorkingHours = new TimeSpan(
+            completed.Sum(x => x.WorkingHours!.Value.Ticks));
+
+        var averageWorkingHours =
+            completed.Count == 0
+                ? TimeSpan.Zero
+                : new TimeSpan(
+                    totalWorkingHours.Ticks / completed.Count);
+
+        var result = new AttendanceReportResultDTO
+        {
+            WorkingDays = rows.Count,
+
+            CompletedDays = completed.Count,
+
+            OpenDays = rows.Count(x => x.CheckOutTime == null),
+
+            TotalWorkingHours = totalWorkingHours,
+
+            AverageWorkingHours = averageWorkingHours,
+
+            EarliestCheckIn = rows
+                .Where(x => x.CheckInTime.HasValue)
+                .OrderBy(x => x.CheckInTime)
+                .Select(x => x.CheckInTime)
+                .FirstOrDefault(),
+
+            LatestCheckOut = rows
+                .Where(x => x.CheckOutTime.HasValue)
+                .OrderByDescending(x => x.CheckOutTime)
+                .Select(x => x.CheckOutTime)
+                .FirstOrDefault(),
+
+            LongestShift = completed
+                .OrderByDescending(x => x.WorkingHours)
+                .Select(x => x.WorkingHours)
+                .FirstOrDefault(),
+
+            ShortestShift = completed
+                .OrderBy(x => x.WorkingHours)
+                .Select(x => x.WorkingHours)
+                .FirstOrDefault(),
+
+            Records = rows
+        };
+
+        return Ok(result);
+    }
+  
+
+    #endregion
+
 
     #region Absent Employees Today
 

@@ -1,0 +1,228 @@
+:host {
+  display: block;
+  padding: 24px;
+  background: #f5f7fb;
+  min-height: 100%;
+}
+
+/* =========================
+   Cards
+========================= */
+
+.filter-card,
+.result-card {
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+}
+
+/* =========================
+   Header
+========================= */
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.page-title mat-icon {
+  color: #1976d2;
+  transform: scale(1.2);
+}
+
+.page-title h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* =========================
+   Filters
+========================= */
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  align-items: end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.filter-group mat-form-field {
+  width: 100%;
+}
+
+.search-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.search-btn {
+  min-width: 220px;
+  height: 52px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.search-btn mat-icon {
+  margin-right: 8px;
+}
+
+/* =========================
+   Results Header
+========================= */
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.result-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.result-title h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.result-title mat-icon {
+  color: #1976d2;
+}
+
+.count-box {
+  background: #1976d2;
+  color: white;
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* =========================
+   Table
+========================= */
+
+.table-container {
+  border-radius: 12px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-header-row {
+  background: #eef3fb;
+}
+
+.mat-mdc-header-cell {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  padding: 16px;
+}
+
+.mat-mdc-row:hover {
+  background: #f8fbff;
+}
+
+/* =========================
+   Chips
+========================= */
+
+.status-working,
+.status-complete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-working {
+  background: #fff8e1;
+  color: #ef6c00;
+}
+
+.status-complete {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* =========================
+   Empty
+========================= */
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty mat-icon {
+  font-size: 70px;
+  width: 70px;
+  height: 70px;
+  color: #bdbdbd;
+}
+
+.empty h3 {
+  margin: 16px 0 8px;
+}
+
+.empty p {
+  color: #757575;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width:1200px) {
+
+  .filters-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+}
+
+@media (max-width:700px) {
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .search-btn {
+    width: 100%;
+  }
+
+}

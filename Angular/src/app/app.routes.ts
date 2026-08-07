@@ -67,7 +67,7 @@ export const routes: Routes = [
     path: 'attendance/report',
     loadComponent: () =>
       import('./pages/attendance/report/report.component').then(
-        m => m.ReportComponent
+        m => m.ReportsComponent
       )
   },
 

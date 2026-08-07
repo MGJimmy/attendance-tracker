@@ -20,7 +20,7 @@ export interface CheckOutDTO {
   employeeId: number;
 }
 
-export interface AttendanceReportDTO {
+export interface AttendanceHistoryDTO {
   employeeId?: number;
   from?: string;
   to?: string;
@@ -32,6 +32,49 @@ export interface Dashboard {
   checkedIn: number;
   checkedOut: number;
   absent: number;
+}
+
+export interface Attendance {
+  employeeId: number;
+  name: string;
+  attendanceDate: string;
+  checkInTime: string | null;
+  checkOutTime: string | null;
+  workingHours: string | null;
+}
+
+export interface AttendanceReportDTO {
+  employeeId?: number;
+  from?: string;
+  to?: string;
+}
+
+export interface AttendanceReportRow {
+  employeeId: number;
+  employeeName: string;
+  attendanceDate: string;
+
+  checkInTime: string | null;
+  checkOutTime: string | null;
+
+  workingHours: string | null;
+}
+
+export interface AttendanceReportResult {
+  workingDays: number;
+  completedDays: number;
+  openDays: number;
+
+  totalWorkingHours: string;
+  averageWorkingHours: string;
+
+  earliestCheckIn: string | null;
+  latestCheckOut: string | null;
+
+  longestShift: string | null;
+  shortestShift: string | null;
+
+  records: AttendanceReportRow[];
 }
 
 @Injectable({
@@ -67,8 +110,20 @@ export class AttendanceService {
     );
   }
 
-  getReport(payload: AttendanceReportDTO): Observable<Attendance[]> {
+  getHistory(payload: AttendanceHistoryDTO): Observable<Attendance[]> {
     return this.http.post<Attendance[]>(
+      `${this.api}/history`,
+      payload
+    );
+  }
+
+  //#endregion
+
+  //#region Report
+  getReport(
+    payload: AttendanceReportDTO
+  ): Observable<AttendanceReportResult> {
+    return this.http.post<AttendanceReportResult>(
       `${this.api}/report`,
       payload
     );
@@ -76,6 +131,7 @@ export class AttendanceService {
 
   //#endregion
 
+  
   //#region Dashboard
 
   getDashboard(): Observable<Dashboard> {
