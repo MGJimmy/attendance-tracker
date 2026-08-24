@@ -39,6 +39,28 @@ mat-nav-list a {
   border-radius: 8px;
 }
 
+.nav-group {
+  box-shadow: none !important;
+  background: transparent;
+  margin: 6px 10px;
+}
+
+.nav-group mat-panel-title {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nav-group ::ng-deep .mat-expansion-panel-body {
+  padding: 0 0 8px;
+}
+
+.nav-group ::ng-deep .mat-expansion-panel-header {
+  padding: 0 8px;
+  height: 48px;
+}
+
 mat-icon {
   margin-right: 8px;
 }

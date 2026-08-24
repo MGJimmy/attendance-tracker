@@ -7,6 +7,7 @@ import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { AuthService } from './core/services/auth.service';
 
@@ -19,7 +20,8 @@ import { AuthService } from './core/services/auth.service';
     MatSidenavModule,
     MatListModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatExpansionModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -31,13 +33,32 @@ export class AppComponent {
   @ViewChild('drawer') drawer?: MatSidenav;
 
   isLoginPage = this.router.url.startsWith('/login');
+  attendanceOpen = this.isAttendanceUrl(this.router.url);
+  deliveriesOpen = this.isDeliveriesUrl(this.router.url);
 
   constructor() {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(event => {
         this.isLoginPage = event.urlAfterRedirects.startsWith('/login');
+        if (this.isAttendanceUrl(event.urlAfterRedirects)) {
+          this.attendanceOpen = true;
+        }
+        if (this.isDeliveriesUrl(event.urlAfterRedirects)) {
+          this.deliveriesOpen = true;
+        }
       });
+  }
+
+  private isAttendanceUrl(url: string): boolean {
+    return url.startsWith('/employees')
+      || url.startsWith('/attendance');
+  }
+
+  private isDeliveriesUrl(url: string): boolean {
+    return url.startsWith('/couriers')
+      || url.startsWith('/destinations')
+      || url.startsWith('/trips');
   }
 
   toggleMenu(): void {

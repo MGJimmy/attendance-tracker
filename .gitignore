@@ -10,6 +10,7 @@ obj/
 Debug/
 Release/
 .build-check/
+.migrate-out/
 
 # Logs
 *.log

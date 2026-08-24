@@ -1,0 +1,100 @@
+<div class="container">
+
+  <div class="header">
+
+    <h2>Couriers</h2>
+
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="add()">
+      <mat-icon>add</mat-icon>
+      Add Courier
+    </button>
+
+  </div>
+
+  <mat-card class="filters">
+    <form [formGroup]="filterForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <mat-select formControlName="name">
+          <mat-option [value]="null">All</mat-option>
+          @for (courier of couriers; track courier.id) {
+            <mat-option [value]="courier.name">{{ courier.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </mat-card>
+
+  <mat-card>
+
+    <table
+      mat-table
+      [dataSource]="filtered"
+      class="mat-elevation-z2 w-100">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let courier">
+          <button class="name-link" type="button" (click)="view(courier.id)">
+            {{ courier.name }}
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="mobileNumber">
+        <th mat-header-cell *matHeaderCellDef>Mobile</th>
+        <td mat-cell *matCellDef="let courier">
+          {{ courier.mobileNumber }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let courier">
+          <span class="status active" *ngIf="courier.isActive">Active</span>
+          <span class="status inactive" *ngIf="!courier.isActive">Inactive</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let courier">
+
+          <button mat-icon-button color="primary" (click)="view(courier.id)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+          <button mat-icon-button color="primary" (click)="edit(courier.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button
+            *ngIf="courier.isActive"
+            mat-icon-button
+            color="warn"
+            (click)="deactivate(courier.id)">
+            <mat-icon>block</mat-icon>
+          </button>
+
+          <button
+            *ngIf="!courier.isActive"
+            mat-icon-button
+            color="accent"
+            (click)="activate(courier.id)">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+  </mat-card>
+
+</div>

@@ -1,0 +1,79 @@
+<div class="container">
+
+  <mat-card>
+
+    <mat-card-header>
+      <mat-card-title>
+        {{ isEditMode ? 'Edit Trip' : 'Add Trip' }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <form [formGroup]="form" (ngSubmit)="save()">
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Courier</mat-label>
+          <mat-select formControlName="courierId">
+            @for (courier of courierOptions; track courier.id) {
+              <mat-option [value]="courier.id">{{ courier.name }}</mat-option>
+            }
+          </mat-select>
+          <mat-error *ngIf="form.controls.courierId.hasError('required')">
+            Courier is required.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Destination</mat-label>
+          <mat-select formControlName="destinationId">
+            @for (destination of destinationOptions; track destination.id) {
+              <mat-option [value]="destination.id">{{ destination.name }}</mat-option>
+            }
+          </mat-select>
+          <mat-error *ngIf="form.controls.destinationId.hasError('required')">
+            Destination is required.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="tripDatePicker" formControlName="tripDate" readonly>
+          <mat-datepicker-toggle matSuffix [for]="tripDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #tripDatePicker></mat-datepicker>
+          <mat-error *ngIf="form.controls.tripDate.hasError('required')">
+            Date is required.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Cost</mat-label>
+          <input matInput type="number" formControlName="cost">
+          <mat-error *ngIf="form.controls.cost.hasError('required')">
+            Cost is required.
+          </mat-error>
+          <mat-error *ngIf="form.controls.cost.hasError('min')">
+            Cost cannot be negative.
+          </mat-error>
+        </mat-form-field>
+
+        @if (errorMessage) {
+          <div class="error">{{ errorMessage }}</div>
+        }
+
+        <div class="actions">
+          <button type="button" mat-stroked-button routerLink="/trips">
+            Cancel
+          </button>
+          <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid">
+            {{ isEditMode ? 'Update Trip' : 'Add Trip' }}
+          </button>
+        </div>
+
+      </form>
+
+    </mat-card-content>
+
+  </mat-card>
+
+</div>

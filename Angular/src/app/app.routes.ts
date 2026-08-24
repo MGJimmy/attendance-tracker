@@ -111,6 +111,96 @@ export const routes: Routes = [
   },
 
   {
+    path: 'couriers',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/courier-list/courier-list.component').then(
+        m => m.CourierListComponent
+      )
+  },
+
+  {
+    path: 'couriers/add',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/add-edit-courier/add-edit-courier.component').then(
+        m => m.AddEditCourierComponent
+      )
+  },
+
+  {
+    path: 'couriers/edit/:id',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/add-edit-courier/add-edit-courier.component').then(
+        m => m.AddEditCourierComponent
+      )
+  },
+
+  {
+    path: 'couriers/:id',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/courier-details/courier-details.component').then(
+        m => m.CourierDetailsComponent
+      )
+  },
+
+  {
+    path: 'destinations',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/destination-list/destination-list.component').then(
+        m => m.DestinationListComponent
+      )
+  },
+
+  {
+    path: 'destinations/add',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/add-edit-destination/add-edit-destination.component').then(
+        m => m.AddEditDestinationComponent
+      )
+  },
+
+  {
+    path: 'destinations/edit/:id',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/add-edit-destination/add-edit-destination.component').then(
+        m => m.AddEditDestinationComponent
+      )
+  },
+
+  {
+    path: 'trips',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/trip-list/trip-list.component').then(
+        m => m.TripListComponent
+      )
+  },
+
+  {
+    path: 'trips/add',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/add-edit-trip/add-edit-trip.component').then(
+        m => m.AddEditTripComponent
+      )
+  },
+
+  {
+    path: 'trips/edit/:id',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/deliveries/add-edit-trip/add-edit-trip.component').then(
+        m => m.AddEditTripComponent
+      )
+  },
+
+  {
     path: '**',
     redirectTo: 'dashboard'
   }

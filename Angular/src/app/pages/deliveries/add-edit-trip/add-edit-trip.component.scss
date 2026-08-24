@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px;
+}
+
+mat-card {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 12px;
+}
+
+mat-card-header {
+  padding-bottom: 16px;
+}
+
+mat-card-title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+mat-card-content {
+  padding-top: 20px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-bottom: 16px;
+}
+
+.error {
+  margin: 0 0 12px;
+  color: #b3261e;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+button {
+  min-width: 120px;
+}
+
+@media (max-width: 768px) {
+
+  .container {
+    padding: 16px;
+  }
+
+  mat-card {
+    max-width: 100%;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+
+  button {
+    min-width: unset;
+  }
+
+}

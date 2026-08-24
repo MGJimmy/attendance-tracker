@@ -42,14 +42,6 @@
 
           <a
             mat-list-item
-            routerLink="/employees"
-            routerLinkActive="active">
-            <mat-icon matListItemIcon>people</mat-icon>
-            <span matListItemTitle>Employees</span>
-          </a>
-
-          <a
-            mat-list-item
             routerLink="/users"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }">
@@ -58,31 +50,94 @@
           </a>
         }
 
-        <a
-          mat-list-item
-          routerLink="/attendance"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }">
-          <mat-icon matListItemIcon>schedule</mat-icon>
-          <span matListItemTitle>Clock In / Out</span>
-        </a>
+        <mat-expansion-panel
+          class="nav-group"
+          [(expanded)]="attendanceOpen">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>event_available</mat-icon>
+              Attendance
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-nav-list>
+            @if (auth.isAdmin()) {
+              <a
+                mat-list-item
+                routerLink="/employees"
+                routerLinkActive="active">
+                <mat-icon matListItemIcon>people</mat-icon>
+                <span matListItemTitle>Employees</span>
+              </a>
+            }
+
+            <a
+              mat-list-item
+              routerLink="/attendance"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }">
+              <mat-icon matListItemIcon>schedule</mat-icon>
+              <span matListItemTitle>Clock In / Out</span>
+            </a>
+
+            @if (auth.isAdmin()) {
+              <a
+                mat-list-item
+                routerLink="/attendance/history"
+                routerLinkActive="active">
+                <mat-icon matListItemIcon>history</mat-icon>
+                <span matListItemTitle>History</span>
+              </a>
+
+              <a
+                mat-list-item
+                routerLink="/attendance/report"
+                routerLinkActive="active">
+                <mat-icon matListItemIcon>assessment</mat-icon>
+                <span matListItemTitle>Reports</span>
+              </a>
+            }
+          </mat-nav-list>
+        </mat-expansion-panel>
 
         @if (auth.isAdmin()) {
-          <a
-            mat-list-item
-            routerLink="/attendance/history"
-            routerLinkActive="active">
-            <mat-icon matListItemIcon>history</mat-icon>
-            <span matListItemTitle>History</span>
-          </a>
+          <mat-expansion-panel
+            class="nav-group"
+            [(expanded)]="deliveriesOpen">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon>local_shipping</mat-icon>
+                Deliveries
+              </mat-panel-title>
+            </mat-expansion-panel-header>
 
-          <a
-            mat-list-item
-            routerLink="/attendance/report"
-            routerLinkActive="active">
-            <mat-icon matListItemIcon>assessment</mat-icon>
-            <span matListItemTitle>Reports</span>
-          </a>
+            <mat-nav-list>
+              <a
+                mat-list-item
+                routerLink="/couriers"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }">
+                <mat-icon matListItemIcon>two_wheeler</mat-icon>
+                <span matListItemTitle>Couriers</span>
+              </a>
+
+              <a
+                mat-list-item
+                routerLink="/destinations"
+                routerLinkActive="active">
+                <mat-icon matListItemIcon>place</mat-icon>
+                <span matListItemTitle>Destinations</span>
+              </a>
+
+              <a
+                mat-list-item
+                routerLink="/trips"
+                routerLinkActive="active">
+                <mat-icon matListItemIcon>route</mat-icon>
+                <span matListItemTitle>Trips</span>
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
         }
 
       </mat-nav-list>
