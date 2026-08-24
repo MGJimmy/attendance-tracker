@@ -13,6 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import {
   Attendance,
@@ -23,6 +25,10 @@ import {
   Employee,
   EmployeeService
 } from '../../../core/services/employee.service';
+import { DATE_FORMAT } from '../../../shared/date-formats';
+import { EgyptDatePipe } from '../../../shared/egypt-date.pipe';
+import { HoursMinutesPipe } from '../../../shared/hours-minutes.pipe';
+import { EditAttendanceDialogComponent } from './edit-attendance-dialog.component';
 
 @Component({
   selector: 'app-history',
@@ -30,7 +36,6 @@ import {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -38,16 +43,22 @@ import {
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTableModule
+    MatTableModule,
+    MatIconModule,
+    MatDialogModule,
+    EgyptDatePipe,
+    HoursMinutesPipe
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
 })
 export class HistoryComponent implements OnInit {
-
   private readonly attendanceService = inject(AttendanceService);
   private readonly employeeService = inject(EmployeeService);
   private readonly fb = inject(FormBuilder);
+  private readonly dialog = inject(MatDialog);
+
+  readonly dateFormat = DATE_FORMAT;
 
   employees: Employee[] = [];
   attendance: Attendance[] = [];
@@ -58,7 +69,8 @@ export class HistoryComponent implements OnInit {
     'name',
     'checkInTime',
     'checkOutTime',
-    'workingHours'
+    'workingHours',
+    'actions'
   ];
 
   form = this.fb.group({
@@ -72,78 +84,61 @@ export class HistoryComponent implements OnInit {
     this.search();
   }
 
-  //#region Load Employees
-
   loadEmployees(): void {
-
     this.employeeService.getActive().subscribe({
-      next: (res) => {
+      next: res => {
         this.employees = res;
       },
-      error: (err) => console.error(err)
+      error: err => console.error(err)
     });
-
   }
 
-  //#endregion
-
-  //#region Search
-
   search(): void {
-
     this.loading = true;
 
     const from = this.form.value.from;
     const to = this.form.value.to;
 
     this.attendanceService.getHistory({
-
       employeeId: this.form.value.employeeId ?? undefined,
-
       from: from ? this.toDateOnly(from) : undefined,
-
       to: to ? this.toDateOnly(to) : undefined
-
     }).subscribe({
-
-      next: (res) => {
+      next: res => {
         this.attendance = res;
         this.loading = false;
       },
-
-      error: (err) => {
+      error: err => {
         console.error(err);
         this.loading = false;
       }
-
     });
-
   }
-
-  //#endregion
-
-  //#region Clear
 
   clear(): void {
-
     this.form.reset();
-
     this.attendance = [];
-
   }
 
-  //#endregion
+  edit(row: Attendance): void {
+    this.dialog.open(EditAttendanceDialogComponent, {
+      width: '480px',
+      data: row
+    }).afterClosed().subscribe(saved => {
+      if (saved) {
+        this.search();
+      }
+    });
+  }
 
   private toDateOnly(date: Date | null): string | undefined {
-  if (!date) {
-    return undefined;
+    if (!date) {
+      return undefined;
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-}
-
 }

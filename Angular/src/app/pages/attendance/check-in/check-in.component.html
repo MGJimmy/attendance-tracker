@@ -1,25 +1,42 @@
 <mat-card class="page-card">
 
   <mat-card-header>
-    <mat-card-title>Employee Attendance</mat-card-title>
-    <mat-card-subtitle>Check In / Check Out</mat-card-subtitle>
+    <mat-card-title>Clock In / Out</mat-card-title>
+    <mat-card-subtitle>Record attendance check-in and check-out</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
 
+    @if (loadError) {
+      <div class="error">{{ loadError }}</div>
+    }
+
     <form [formGroup]="form" class="attendance-form">
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Select Employee</mat-label>
+      @if (isAdmin) {
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Employee</mat-label>
+          <mat-select formControlName="employeeId">
+            <mat-option *ngFor="let employee of employees" [value]="employee.id">
+              {{ employee.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-        <mat-select formControlName="employeeId">
-          <mat-option *ngFor="let employee of employees"
-                      [value]="employee.id">
-            {{ employee.name }}
-          </mat-option>
-        </mat-select>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Date and time (Egypt)</mat-label>
+          <input matInput type="datetime-local" formControlName="occurredAt" />
+        </mat-form-field>
+      } @else if (currentEmployee) {
+        <div class="current-employee">
+          <strong>Employee</strong>
+          <span>{{ currentEmployee.name }}</span>
+        </div>
+      }
 
-      </mat-form-field>
+      @if (errorMessage) {
+        <div class="error">{{ errorMessage }}</div>
+      }
 
       <div class="actions">
 
@@ -28,11 +45,9 @@
           color="primary"
           type="button"
           (click)="checkIn()"
-          [disabled]="form.invalid">
-
+          [disabled]="form.invalid || (!isAdmin && !currentEmployee)">
           <mat-icon>login</mat-icon>
           Check In
-
         </button>
 
         <button
@@ -40,11 +55,9 @@
           color="accent"
           type="button"
           (click)="checkOut()"
-          [disabled]="form.invalid">
-
+          [disabled]="form.invalid || (!isAdmin && !currentEmployee)">
           <mat-icon>logout</mat-icon>
           Check Out
-
         </button>
 
       </div>
@@ -64,17 +77,17 @@
 
         <tr>
           <td><strong>Check In</strong></td>
-          <td>{{ attendance.checkInTime || '-' }}</td>
+          <td>{{ attendance.checkInTime | egyptDate }}</td>
         </tr>
 
         <tr>
           <td><strong>Check Out</strong></td>
-          <td>{{ attendance.checkOutTime || '-' }}</td>
+          <td>{{ attendance.checkOutTime | egyptDate }}</td>
         </tr>
 
         <tr>
           <td><strong>Working Hours</strong></td>
-          <td>{{ attendance.workingHours || '-' }}</td>
+          <td>{{ attendance.workingHours | hoursMinutes }}</td>
         </tr>
 
       </table>

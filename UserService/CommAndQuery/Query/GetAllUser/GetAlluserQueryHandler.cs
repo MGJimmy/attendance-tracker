@@ -30,7 +30,8 @@ public class GetAlluserQueryHandler : IRequestHandler<GetAlluserQuery, List<User
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
-                Roles = roles.ToList()
+                Roles = roles.ToList(),
+                IsActive = user.LockoutEnd == null || user.LockoutEnd <= DateTimeOffset.UtcNow
             });
         }
         return result;

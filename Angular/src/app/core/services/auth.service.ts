@@ -59,4 +59,58 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getAccessToken();
   }
+
+  getUserId(): string | null {
+    return this.readClaim('nameIdentifier') ?? this.readClaim('nameid');
+  }
+
+  getRoles(): string[] {
+    const raw =
+      this.readClaim('roles') ??
+      this.readClaim('role') ??
+      this.readClaim('http://schemas.microsoft.com/ws/2008/06/identity/claims/role');
+
+    if (!raw) {
+      return [];
+    }
+
+    if (Array.isArray(raw)) {
+      return raw.map(role => String(role));
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.map(role => String(role)) : [String(parsed)];
+    } catch {
+      return [String(raw)];
+    }
+  }
+
+  isAdmin(): boolean {
+    return this.getRoles().some(role => role.toLowerCase() === 'admin');
+  }
+
+  homeUrl(): string {
+    return this.isAdmin() ? '/dashboard' : '/attendance';
+  }
+
+  private readClaim(key: string): any {
+    const payload = this.decodeToken();
+    return payload?.[key];
+  }
+
+  private decodeToken(): any | null {
+    const token = this.getAccessToken();
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payload = token.split('.')[1];
+      const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(json);
+    } catch {
+      return null;
+    }
+  }
 }

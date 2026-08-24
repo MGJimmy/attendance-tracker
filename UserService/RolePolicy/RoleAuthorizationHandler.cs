@@ -15,8 +15,9 @@ internal sealed class RoleAuthorizationHandler : AuthorizationHandler<RoleRequir
 
         foreach (var role in roles)
         {
-            var canAccess = context.User.Claims.Any(c => (c.Type == AppClaimType.Roles || c.Type == ClaimTypes.Role)
-                && c.Value.ToLower() == role.ToLower());
+            var canAccess = context.User.Claims.Any(c =>
+                (c.Type == AppClaimType.Roles || c.Type == ClaimTypes.Role || c.Type == "role")
+                && RoleValueContains(c.Value, role));
 
             if (canAccess)
             {
@@ -26,6 +27,27 @@ internal sealed class RoleAuthorizationHandler : AuthorizationHandler<RoleRequir
         }
 
         await Task.CompletedTask;
+    }
 
+    private static bool RoleValueContains(string claimValue, string role)
+    {
+        if (string.IsNullOrWhiteSpace(claimValue) || string.IsNullOrWhiteSpace(role))
+            return false;
+
+        var trimmed = claimValue.Trim();
+        if (trimmed.StartsWith('['))
+        {
+            try
+            {
+                var roles = System.Text.Json.JsonSerializer.Deserialize<string[]>(trimmed);
+                return roles?.Any(value =>
+                    string.Equals(value, role, StringComparison.OrdinalIgnoreCase)) == true;
+            }
+            catch (System.Text.Json.JsonException)
+            {
+            }
+        }
+
+        return string.Equals(trimmed, role, StringComparison.OrdinalIgnoreCase);
     }
 }

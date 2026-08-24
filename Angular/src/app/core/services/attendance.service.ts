@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface Attendance {
+  id: number;
   employeeId: number;
   name: string;
   attendanceDate: string;
@@ -13,11 +14,13 @@ export interface Attendance {
 }
 
 export interface CheckInDTO {
-  employeeId: number;
+  employeeId?: number;
+  occurredAt?: string;
 }
 
 export interface CheckOutDTO {
-  employeeId: number;
+  employeeId?: number;
+  occurredAt?: string;
 }
 
 export interface AttendanceHistoryDTO {
@@ -32,15 +35,6 @@ export interface Dashboard {
   checkedIn: number;
   checkedOut: number;
   absent: number;
-}
-
-export interface Attendance {
-  employeeId: number;
-  name: string;
-  attendanceDate: string;
-  checkInTime: string | null;
-  checkOutTime: string | null;
-  workingHours: string | null;
 }
 
 export interface AttendanceReportDTO {
@@ -72,7 +66,12 @@ export interface AttendanceReportResult {
   latestCheckOut: string | null;
 
   longestShift: string | null;
+  longestShiftDate: string | null;
   shortestShift: string | null;
+  shortestShiftDate: string | null;
+
+  salaryPerHour: number | null;
+  totalSalary: number;
 
   records: AttendanceReportRow[];
 }
@@ -115,6 +114,10 @@ export class AttendanceService {
       `${this.api}/history`,
       payload
     );
+  }
+
+  editAttendance(id: number, payload: { checkInTime: string; checkOutTime?: string | null }): Observable<any> {
+    return this.http.put(`${this.api}/attendance/${id}`, payload);
   }
 
   //#endregion

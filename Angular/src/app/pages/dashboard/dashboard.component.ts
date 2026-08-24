@@ -8,6 +8,8 @@ import {
   AttendanceService,
   Dashboard
 } from '../../core/services/attendance.service';
+import { EgyptDatePipe } from '../../shared/egypt-date.pipe';
+import { HoursMinutesPipe } from '../../shared/hours-minutes.pipe';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +17,9 @@ import {
   imports: [
     CommonModule,
     MatCardModule,
-    MatTableModule
+    MatTableModule,
+    EgyptDatePipe,
+    HoursMinutesPipe
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'

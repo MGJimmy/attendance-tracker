@@ -1,6 +1,5 @@
-<div class="reports-container">
+<div class="reports-page">
 
-  <!-- Filters -->
   <mat-card class="filter-card">
 
     <mat-card-header>
@@ -21,7 +20,7 @@
 
           <mat-select formControlName="employeeId">
             <mat-option [value]="null">
-              All Employees
+              Select employee
             </mat-option>
 
             <mat-option
@@ -72,7 +71,8 @@
             mat-raised-button
             color="primary"
             type="button"
-            (click)="search()">
+            (click)="search()"
+            [disabled]="!form.value.employeeId">
 
             Search
 
@@ -96,6 +96,11 @@
 
   </mat-card>
 
+  <mat-card class="empty-card" *ngIf="!report">
+    <mat-card-content>
+      Select an employee and search to view the report.
+    </mat-card-content>
+  </mat-card>
 
   <!-- Summary -->
   <div
@@ -118,36 +123,52 @@
     </mat-card>
 
     <mat-card class="summary-card">
+      <h3>Salary / Hour</h3>
+      <span>{{ report.salaryPerHour != null ? (report.salaryPerHour | number:'1.2-2') : '-' }}</span>
+    </mat-card>
+
+    <mat-card class="summary-card">
       <h3>Total Hours</h3>
-      <span>{{ report.totalWorkingHours }}</span>
+      <span>{{ report.totalWorkingHours | hoursMinutes }}</span>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <h3>Total Salary</h3>
+      <span>{{ report.totalSalary | number:'1.2-2' }}</span>
     </mat-card>
 
     <mat-card class="summary-card">
       <h3>Average Hours</h3>
-      <span>{{ report.averageWorkingHours }}</span>
+      <span>{{ report.averageWorkingHours | hoursMinutes }}</span>
     </mat-card>
 
     <mat-card class="summary-card">
       <h3>Longest Shift</h3>
-      <span>{{ report.longestShift ?? '-' }}</span>
+      <span>{{ report.longestShift | hoursMinutes }}</span>
+      <small *ngIf="report.longestShiftDate">
+        {{ report.longestShiftDate | egyptDate:'dd/MM/yyyy' }}
+      </small>
     </mat-card>
 
     <mat-card class="summary-card">
       <h3>Shortest Shift</h3>
-      <span>{{ report.shortestShift ?? '-' }}</span>
+      <span>{{ report.shortestShift | hoursMinutes }}</span>
+      <small *ngIf="report.shortestShiftDate">
+        {{ report.shortestShiftDate | egyptDate:'dd/MM/yyyy' }}
+      </small>
     </mat-card>
 
     <mat-card class="summary-card">
       <h3>Earliest Check In</h3>
       <span>
-        {{ report.earliestCheckIn ? (report.earliestCheckIn | date:'short') : '-' }}
+        {{ report.earliestCheckIn | egyptDate }}
       </span>
     </mat-card>
 
     <mat-card class="summary-card">
       <h3>Latest Check Out</h3>
       <span>
-        {{ report.latestCheckOut ? (report.latestCheckOut | date:'short') : '-' }}
+        {{ report.latestCheckOut | egyptDate }}
       </span>
     </mat-card>
 
@@ -187,19 +208,19 @@
               <td>{{ row.employeeName }}</td>
 
               <td>
-                {{ row.attendanceDate | date:'yyyy-MM-dd' }}
+                {{ row.attendanceDate | egyptDate:'dd/MM/yyyy' }}
               </td>
 
               <td>
-                {{ row.checkInTime ? (row.checkInTime | date:'shortTime') : '-' }}
+                {{ row.checkInTime | egyptDate }}
               </td>
 
               <td>
-                {{ row.checkOutTime ? (row.checkOutTime | date:'shortTime') : '-' }}
+                {{ row.checkOutTime | egyptDate }}
               </td>
 
               <td>
-                {{ row.workingHours ?? '-' }}
+                {{ row.workingHours | hoursMinutes }}
               </td>
 
             </tr>

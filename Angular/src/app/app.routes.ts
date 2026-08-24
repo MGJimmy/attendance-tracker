@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -18,7 +19,7 @@ export const routes: Routes = [
 
   {
     path: 'dashboard',
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then(
         m => m.DashboardComponent
@@ -26,8 +27,17 @@ export const routes: Routes = [
   },
 
   {
+    path: 'users',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () =>
+      import('./pages/users/user-list/user-list.component').then(
+        m => m.UserListComponent
+      )
+  },
+
+  {
     path: 'users/create',
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () =>
       import('./pages/users/create-user/create-user.component').then(
         m => m.CreateUserComponent
@@ -36,7 +46,7 @@ export const routes: Routes = [
 
   {
     path: 'employees',
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () =>
       import('./pages/employees/employee-list/employee-list.component').then(
         m => m.EmployeeListComponent
@@ -45,7 +55,7 @@ export const routes: Routes = [
 
   {
     path: 'employees/add',
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () =>
       import('./pages/employees/add-edit-employee/add-edit-employee.component').then(
         m => m.AddEditEmployeeComponent
@@ -54,7 +64,7 @@ export const routes: Routes = [
 
   {
     path: 'employees/edit/:id',
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () =>
       import('./pages/employees/add-edit-employee/add-edit-employee.component').then(
         m => m.AddEditEmployeeComponent
@@ -62,7 +72,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'attendance/check-in',
+    path: 'attendance',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/attendance/check-in/check-in.component').then(
@@ -71,17 +81,20 @@ export const routes: Routes = [
   },
 
   {
+    path: 'attendance/check-in',
+    redirectTo: 'attendance',
+    pathMatch: 'full'
+  },
+
+  {
     path: 'attendance/check-out',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./pages/attendance/check-out/check-out.component').then(
-        m => m.CheckOutComponent
-      )
+    redirectTo: 'attendance',
+    pathMatch: 'full'
   },
 
   {
     path: 'attendance/history',
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () =>
       import('./pages/attendance/history/history.component').then(
         m => m.HistoryComponent
@@ -90,7 +103,7 @@ export const routes: Routes = [
 
   {
     path: 'attendance/report',
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () =>
       import('./pages/attendance/report/report.component').then(
         m => m.ReportsComponent

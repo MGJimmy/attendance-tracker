@@ -18,7 +18,15 @@
 
         public TimeSpan? LongestShift { get; set; }
 
+        public DateOnly? LongestShiftDate { get; set; }
+
         public TimeSpan? ShortestShift { get; set; }
+
+        public DateOnly? ShortestShiftDate { get; set; }
+
+        public decimal? SalaryPerHour { get; set; }
+
+        public decimal TotalSalary { get; set; }
 
         public List<AttendanceReportRowDTO> Records { get; set; } = [];
     }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Identity.Service
 {
@@ -31,6 +31,11 @@ namespace Identity.Service
             if (!isValidPassword)
             {
                 return LoginStatus.WrongCredentials;
+            }
+
+            if (await _userManager.IsLockedOutAsync(user))
+            {
+                return LoginStatus.IsDeactivated;
             }
 
             return LoginStatus.Succeeded;
@@ -98,6 +103,28 @@ namespace Identity.Service
                 return (true, null);
 
             return (false, string.Join(", ", addResult.Errors.Select(e => e.Description)));
+        }
+
+        public async Task<(bool Success, string ErrorMessage)> SetActiveAsync(string userId, bool isActive)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return (false, "User not found");
+            }
+
+            await _userManager.SetLockoutEnabledAsync(user, true);
+
+            var result = isActive
+                ? await _userManager.SetLockoutEndDateAsync(user, null)
+                : await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow.AddYears(100));
+
+            if (result.Succeeded)
+            {
+                return (true, null);
+            }
+
+            return (false, string.Join(", ", result.Errors.Select(e => e.Description)));
         }
     }
 }

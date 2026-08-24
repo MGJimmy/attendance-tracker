@@ -17,11 +17,12 @@ import {
   AttendanceReportResult,
   AttendanceService
 } from '../../../core/services/attendance.service';
-
 import {
   Employee,
   EmployeeService
 } from '../../../core/services/employee.service';
+import { EgyptDatePipe } from '../../../shared/egypt-date.pipe';
+import { HoursMinutesPipe } from '../../../shared/hours-minutes.pipe';
 
 @Component({
   selector: 'app-reports',
@@ -35,7 +36,9 @@ import {
     MatFormFieldModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatInputModule
+    MatInputModule,
+    EgyptDatePipe,
+    HoursMinutesPipe
   ],
   templateUrl: './report.component.html',
   styleUrl: './report.component.scss'
@@ -68,7 +71,6 @@ export class ReportsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadEmployees();
-    this.search();
   }
 
   loadEmployees(): void {
@@ -79,11 +81,16 @@ export class ReportsComponent implements OnInit {
   }
 
   search(): void {
+    const employeeId = this.form.value.employeeId;
+    if (!employeeId) {
+      this.report = null;
+      return;
+    }
 
     this.loading = true;
 
     const payload: AttendanceReportDTO = {
-      employeeId: this.form.value.employeeId ?? undefined,
+      employeeId,
       from: this.toDateOnly(this.form.value.from),
       to: this.toDateOnly(this.form.value.to)
     };
@@ -109,7 +116,7 @@ export class ReportsComponent implements OnInit {
       to: null
     });
 
-    this.search();
+    this.report = null;
 
   }
 

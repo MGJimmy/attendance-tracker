@@ -60,4 +60,8 @@ export class EmployeeService {
     return this.http.get<Employee>(`${this.api}/${id}`);
   }
 
+  getCurrent(): Observable<Employee> {
+    return this.http.get<Employee>(`${this.api}/me`);
+  }
+
 }

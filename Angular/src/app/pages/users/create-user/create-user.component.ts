@@ -55,7 +55,7 @@ export class CreateUserComponent {
       password: this.form.value.password!,
       role: this.form.value.role!
     }).subscribe({
-      next: () => this.router.navigate(['/employees']),
+      next: () => this.router.navigate(['/users']),
       error: (error: HttpErrorResponse) => {
         const body = error.error as CreateUserResponse | string | undefined;
         if (typeof body === 'string') {

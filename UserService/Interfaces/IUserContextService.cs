@@ -5,4 +5,5 @@ public interface IUserContextService
     string GetCurrentUserId();
     string GetCurrentUserName();
     IEnumerable<string> GetCurrentUserRoles();
+    bool IsAdmin();
 }

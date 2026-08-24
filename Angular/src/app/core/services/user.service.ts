@@ -11,6 +11,7 @@ export interface UserDto {
   lastName: string;
   phoneNumber: string;
   roles: string[];
+  isActive: boolean;
 }
 
 export interface CreateUserPayload {
@@ -47,5 +48,13 @@ export class UserService {
     }
 
     return this.http.get<UserDto[]>(`${this.api}/available`, { params });
+  }
+
+  activate(id: string): Observable<any> {
+    return this.http.post(`${this.api}/activate/${id}`, {});
+  }
+
+  deactivate(id: string): Observable<any> {
+    return this.http.post(`${this.api}/deactivate/${id}`, {});
   }
 }

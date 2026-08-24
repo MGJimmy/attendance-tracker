@@ -1,6 +1,8 @@
-﻿namespace AttendanceTracker.Contracts;
+namespace AttendanceTracker.Contracts;
 
 public class CheckInDTO
 {
-    public int EmployeeId { get; set; }
+    public int? EmployeeId { get; set; }
+
+    public DateTime? OccurredAt { get; set; }
 }

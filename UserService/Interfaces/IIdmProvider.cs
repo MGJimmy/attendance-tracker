@@ -1,4 +1,4 @@
-﻿namespace Identity.Service;
+namespace Identity.Service;
 
 public interface IIdmProvider<TUser> where TUser : IApplicationUser
 {
@@ -11,6 +11,7 @@ public interface IIdmProvider<TUser> where TUser : IApplicationUser
     Task<(bool Success, string ErrorMessage)> AssignRolesToUser(TUser user, IEnumerable<string> roles);
     Task<TUser> FindByIdAsync(string userId);
     Task<(bool Success, string ErrorMessage)> ReplaceRolesAsync(TUser user, IEnumerable<string> newRoles);
+    Task<(bool Success, string ErrorMessage)> SetActiveAsync(string userId, bool isActive);
 }
 
 

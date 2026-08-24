@@ -9,6 +9,7 @@ obj/
 # Build output
 Debug/
 Release/
+.build-check/
 
 # Logs
 *.log

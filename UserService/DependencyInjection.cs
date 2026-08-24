@@ -104,12 +104,15 @@ namespace Identity.Service
 
             }).AddJwtBearer(options =>
             {
+                options.MapInboundClaims = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidIssuer = jwtSettings.Issuer,
                     ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateLifetime = true,
+                    RoleClaimType = AppClaimType.Roles,
+                    NameClaimType = AppClaimType.Username
                 };
             });
 
