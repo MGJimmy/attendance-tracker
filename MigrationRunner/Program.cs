@@ -1,60 +1,39 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AttendanceTracker.Infrastructure;
+using Identity.Service;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Printpress.Infrastructure;
 using Printpress.MigrationRunner;
 
-public class Program
+try
 {
-    public static void Main(string[] args)
-    {
-        try
-        {
-            // Build configuration (e.g., from appsettings.json)
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
+    var configuration = new ConfigurationBuilder()
+        .SetBasePath(AppContext.BaseDirectory)
+        .AddJsonFile("appsettings.json")
+        .Build();
 
-            // Set up dependency injection
-            var serviceProvider = new ServiceCollection()
-                .AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")))
-                .AddScoped<SeedingDbContext>()
-                .BuildServiceProvider();
+    var serviceProvider = new ServiceCollection()
+        .AddLogging()
+        .AddDbContext<AppDBContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")))
+        .AddUserServices(configuration)
+        .AddScoped<IdentitySeeder>()
+        .BuildServiceProvider();
 
-            // Resolve the DbContext and run database migrations
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                var seedingDbContext = scope.ServiceProvider.GetRequiredService<SeedingDbContext>();
+    using var scope = serviceProvider.CreateScope();
 
+    var appDbContext = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+    var identityDbContext = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+    var seeder = scope.ServiceProvider.GetRequiredService<IdentitySeeder>();
 
-                // Apply migrations
-                dbContext.Database.Migrate();
+    await appDbContext.Database.MigrateAsync();
+    await identityDbContext.Database.MigrateAsync();
+    await seeder.SeedAdminAsync();
 
-                //use this in development only
-                //seedingDbContext.SeedingMockData();
-
-                //use this to add lockup data
-                seedingDbContext.SeedingData();
-
-                //call save changes only here to save the data dont call it in the seeding methods
-                dbContext.CurrentUserId = "Seeding";
-                dbContext.SaveChanges();
-
-                Console.WriteLine("Database migrations applied successfully.");
-
-                Console.ReadLine();
-            }
-
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred while applying migrations: " + ex.Message);
-        }
-
-
-
-    }
+    Console.WriteLine("Database migrations and admin seeding completed successfully.");
 }
-
+catch (Exception ex)
+{
+    Console.WriteLine("An error occurred while applying migrations: " + ex.Message);
+    Console.WriteLine(ex);
+}

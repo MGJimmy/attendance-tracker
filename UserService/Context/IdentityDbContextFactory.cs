@@ -9,7 +9,7 @@ namespace Identity.Service
     {
         public IdentityDbContext CreateDbContext(string[] args)
         {
-            var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Printpress.API");
+            var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "AttendanceTracker");
 
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(basePath) 
