@@ -1,73 +1,84 @@
-<mat-toolbar color="primary">
+@if (!isLoginPage) {
+  <mat-toolbar color="primary">
 
-  <button
-    mat-icon-button
-    (click)="drawer.toggle()">
-    <mat-icon>menu</mat-icon>
-  </button>
+    <button
+      mat-icon-button
+      (click)="toggleMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
 
-  <span class="title">
-    Attendance Tracker
-  </span>
+    <span class="title">
+      Attendance Tracker
+    </span>
 
-</mat-toolbar>
+    <span class="spacer"></span>
 
-<mat-sidenav-container class="container">
+    <button mat-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
 
-  <mat-sidenav
-    #drawer
-    mode="side"
-    opened>
+  </mat-toolbar>
+}
 
-    <mat-nav-list>
+<mat-sidenav-container class="container" [class.login-mode]="isLoginPage">
 
-      <a
-        mat-list-item
-        routerLink="/dashboard"
-        routerLinkActive="active">
-        <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
-      </a>
+  @if (!isLoginPage) {
+    <mat-sidenav
+      #drawer
+      mode="side"
+      opened>
 
-      <a
-        mat-list-item
-        routerLink="/employees"
-        routerLinkActive="active">
-        <mat-icon matListItemIcon>people</mat-icon>
-        <span matListItemTitle>Employees</span>
-      </a>
+      <mat-nav-list>
 
-      <a
-        mat-list-item
-        routerLink="/attendance/check-in"
-        routerLinkActive="active">
-        <mat-icon matListItemIcon>login</mat-icon>
-        <span matListItemTitle>Check In</span>
-      </a>
+        <a
+          mat-list-item
+          routerLink="/dashboard"
+          routerLinkActive="active">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle>Dashboard</span>
+        </a>
 
-      <a
-        mat-list-item
-        routerLink="/attendance/history"
-        routerLinkActive="active">
-        <mat-icon matListItemIcon>history</mat-icon>
-        <span matListItemTitle>History</span>
-      </a>
+        <a
+          mat-list-item
+          routerLink="/employees"
+          routerLinkActive="active">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle>Employees</span>
+        </a>
 
-      <a
-        mat-list-item
-        routerLink="/attendance/report"
-        routerLinkActive="active">
-        <mat-icon matListItemIcon>assessment</mat-icon>
-        <span matListItemTitle>Reports</span>
-      </a>
+        <a
+          mat-list-item
+          routerLink="/attendance/check-in"
+          routerLinkActive="active">
+          <mat-icon matListItemIcon>login</mat-icon>
+          <span matListItemTitle>Check In</span>
+        </a>
 
-    </mat-nav-list>
+        <a
+          mat-list-item
+          routerLink="/attendance/history"
+          routerLinkActive="active">
+          <mat-icon matListItemIcon>history</mat-icon>
+          <span matListItemTitle>History</span>
+        </a>
 
-  </mat-sidenav>
+        <a
+          mat-list-item
+          routerLink="/attendance/report"
+          routerLinkActive="active">
+          <mat-icon matListItemIcon>assessment</mat-icon>
+          <span matListItemTitle>Reports</span>
+        </a>
+
+      </mat-nav-list>
+
+    </mat-sidenav>
+  }
 
   <mat-sidenav-content>
 
-    <div class="content">
+    <div class="content" [class.login-content]="isLoginPage">
 
       <router-outlet></router-outlet>
 

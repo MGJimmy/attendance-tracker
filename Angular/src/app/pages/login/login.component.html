@@ -1,0 +1,88 @@
+<div class="login-page">
+  <aside class="hero">
+    <a class="hero-photo" [href]="heroCredit" target="_blank" rel="noopener noreferrer">
+      <img [src]="heroImage" alt="Pharmacy medicine shelves" />
+    </a>
+
+    <div class="hero-overlay">
+      <div class="brand">
+        <mat-icon>local_pharmacy</mat-icon>
+        <span>Care Pharmacy</span>
+      </div>
+      <h1>Staff attendance, made simple.</h1>
+      <p>Sign in to check in, manage employees, and review daily pharmacy coverage.</p>
+
+      <a class="pharmacist" [href]="pharmacistCredit" target="_blank" rel="noopener noreferrer">
+        <img [src]="pharmacistImage" alt="Pharmacist selecting medication" />
+        <span>Trusted pharmacy staff, every shift.</span>
+      </a>
+    </div>
+  </aside>
+
+  <section class="panel">
+    <div class="card">
+      <a class="pills" [href]="pillsCredit" target="_blank" rel="noopener noreferrer">
+        <img [src]="pillsImage" alt="Medication blister pack" />
+      </a>
+
+      <div class="card-header">
+        <mat-icon>local_pharmacy</mat-icon>
+        <div>
+          <h2>Welcome back</h2>
+          <p>Sign in with your staff username</p>
+        </div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" autocomplete="username" />
+          <mat-icon matPrefix>person</mat-icon>
+          @if (form.controls.username.touched && form.controls.username.hasError('required')) {
+            <mat-error>Username is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            autocomplete="current-password" />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'">
+            <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+          @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+            <mat-error>Password is required</mat-error>
+          }
+        </mat-form-field>
+
+        @if (errorMessage) {
+          <div class="error">{{ errorMessage }}</div>
+        }
+
+        <button mat-flat-button class="submit" type="submit" [disabled]="loading">
+          @if (loading) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Sign in
+          }
+        </button>
+      </form>
+
+      <p class="credits">
+        Photos from
+        <a [href]="heroCredit" target="_blank" rel="noopener noreferrer">Unsplash</a>
+        and
+        <a [href]="pharmacistCredit" target="_blank" rel="noopener noreferrer">Pexels</a>
+      </p>
+    </div>
+  </section>
+</div>

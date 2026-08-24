@@ -2,6 +2,14 @@
   height: calc(100vh - 64px);
 }
 
+.container.login-mode {
+  height: 100vh;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
 mat-sidenav {
   width: 250px;
   border-right: 1px solid #e0e0e0;
@@ -9,6 +17,10 @@ mat-sidenav {
 
 .content {
   padding: 24px;
+}
+
+.content.login-content {
+  padding: 0;
 }
 
 .title {
@@ -36,11 +48,19 @@ mat-icon {
     height: calc(100vh - 56px);
   }
 
+  .container.login-mode {
+    height: 100vh;
+  }
+
   mat-sidenav {
     width: 220px;
   }
 
   .content {
     padding: 16px;
+  }
+
+  .content.login-content {
+    padding: 0;
   }
 }
