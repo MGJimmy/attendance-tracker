@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttendanceTracker", "Attend
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Service", "UserService\Identity.Service.csproj", "{F82CC2FB-E464-077D-3484-D2C4463D0EA7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Printpress.MigrationRunner", "MigrationRunner\Printpress.MigrationRunner.csproj", "{6358B869-FABC-FFEC-61BF-EC2ADF0F1D1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F82CC2FB-E464-077D-3484-D2C4463D0EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F82CC2FB-E464-077D-3484-D2C4463D0EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F82CC2FB-E464-077D-3484-D2C4463D0EA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6358B869-FABC-FFEC-61BF-EC2ADF0F1D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6358B869-FABC-FFEC-61BF-EC2ADF0F1D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6358B869-FABC-FFEC-61BF-EC2ADF0F1D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6358B869-FABC-FFEC-61BF-EC2ADF0F1D1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
