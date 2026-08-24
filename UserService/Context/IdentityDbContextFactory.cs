@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace Identity.Service
 {
@@ -9,10 +8,14 @@ namespace Identity.Service
     {
         public IdentityDbContext CreateDbContext(string[] args)
         {
-            var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "AttendanceTracker");
+            var current = Directory.GetCurrentDirectory();
+            var apiPath = Path.Combine(current, "appsettings.json");
+            var siblingPath = Path.GetFullPath(Path.Combine(current, "..", "AttendanceTracker"));
+
+            var basePath = File.Exists(apiPath) ? current : siblingPath;
 
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(basePath) 
+                .SetBasePath(basePath)
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 

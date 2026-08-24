@@ -1,7 +1,9 @@
 ﻿using AttendanceTracker.Contracts;
 using AttendanceTracker.Domain;
 using AttendanceTracker.Infrastructure;
+using Identity.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +15,12 @@ namespace AttendanceTracker.Controllers;
 public class EmployeeController : ControllerBase
 {
     private readonly AppDBContext _appDBContext;
+    private readonly UserManager<User> _userManager;
 
-    public EmployeeController(AppDBContext appDBContext)
+    public EmployeeController(AppDBContext appDBContext, UserManager<User> userManager)
     {
         _appDBContext = appDBContext;
+        _userManager = userManager;
     }
 
     #region Add
@@ -27,10 +31,14 @@ public class EmployeeController : ControllerBase
         if (string.IsNullOrWhiteSpace(payload.Name))
             return BadRequest("Employee name is required.");
 
-        if (payload.Salary <= 0)
-            return BadRequest("Salary must be greater than zero.");
+        if (payload.SalaryPerHour <= 0)
+            return BadRequest("Salary per hour must be greater than zero.");
 
         payload.Name = payload.Name.Trim();
+
+        var userError = await ValidateUserLinkAsync(payload.UserId);
+        if (userError != null)
+            return BadRequest(userError);
 
         var exists = await _appDBContext.Employees
             .AnyAsync(x => x.Name.ToLower() == payload.Name.ToLower());
@@ -41,7 +49,8 @@ public class EmployeeController : ControllerBase
         var employee = new Employee
         {
             Name = payload.Name,
-            Salary = payload.Salary,
+            SalaryPerHour = payload.SalaryPerHour,
+            UserId = payload.UserId.Trim(),
             IsActive = true
         };
 
@@ -67,10 +76,14 @@ public class EmployeeController : ControllerBase
         if (string.IsNullOrWhiteSpace(payload.Name))
             return BadRequest("Employee name is required.");
 
-        if (payload.Salary <= 0)
-            return BadRequest("Salary must be greater than zero.");
+        if (payload.SalaryPerHour <= 0)
+            return BadRequest("Salary per hour must be greater than zero.");
 
         payload.Name = payload.Name.Trim();
+
+        var userError = await ValidateUserLinkAsync(payload.UserId, payload.Id);
+        if (userError != null)
+            return BadRequest(userError);
 
         var duplicate = await _appDBContext.Employees
             .AnyAsync(x =>
@@ -81,7 +94,8 @@ public class EmployeeController : ControllerBase
             return BadRequest("Another employee already has this name.");
 
         employee.Name = payload.Name;
-        employee.Salary = payload.Salary;
+        employee.SalaryPerHour = payload.SalaryPerHour;
+        employee.UserId = payload.UserId.Trim();
 
         await _appDBContext.SaveChangesAsync();
 
@@ -568,5 +582,27 @@ public class EmployeeController : ControllerBase
     }
 
     #endregion
+
+    private async Task<string?> ValidateUserLinkAsync(string userId, int? employeeId = null)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            return "A user must be selected.";
+
+        userId = userId.Trim();
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+            return "Selected user was not found.";
+
+        var alreadyLinked = await _appDBContext.Employees
+            .AnyAsync(employee =>
+                employee.UserId == userId &&
+                (employeeId == null || employee.Id != employeeId.Value));
+
+        if (alreadyLinked)
+            return "This user is already linked to another employee.";
+
+        return null;
+    }
 
 }

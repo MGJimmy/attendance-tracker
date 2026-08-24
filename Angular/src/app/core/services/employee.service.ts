@@ -6,19 +6,22 @@ import { environment } from '../../../environments/environment';
 export interface Employee {
   id: number;
   name: string;
-  salary: number;
+  salaryPerHour: number;
+  userId: string;
   isActive: boolean;
 }
 
 export interface AddEmployeeDTO {
   name: string;
-  salary: number;
+  salaryPerHour: number;
+  userId: string;
 }
 
 export interface EditEmployeeDTO {
   id: number;
   name: string;
-  salary: number;
+  salaryPerHour: number;
+  userId: string;
 }
 
 @Injectable({
@@ -27,11 +30,7 @@ export interface EditEmployeeDTO {
 export class EmployeeService {
 
   private readonly http = inject(HttpClient);
-
-  // Change this to your API URL
-  //private readonly api = 'https://localhost:5001/employee';
-  // Example:
-   private readonly api = environment.apiUrl + '/employee';
+  private readonly api = environment.apiUrl + '/employee';
 
   add(payload: AddEmployeeDTO): Observable<Employee> {
     return this.http.post<Employee>(`${this.api}/add`, payload);

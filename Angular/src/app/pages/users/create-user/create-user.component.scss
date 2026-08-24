@@ -49,13 +49,8 @@ button {
 }
 
 @media (max-width: 768px) {
-
   .container {
     padding: 16px;
-  }
-
-  mat-card {
-    max-width: 100%;
   }
 
   .actions {
@@ -65,9 +60,4 @@ button {
   .actions button {
     width: 100%;
   }
-
-  button {
-    min-width: unset;
-  }
-
 }

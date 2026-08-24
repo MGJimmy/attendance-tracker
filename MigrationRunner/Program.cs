@@ -26,8 +26,12 @@ try
     var identityDbContext = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
     var seeder = scope.ServiceProvider.GetRequiredService<IdentitySeeder>();
 
-    await appDbContext.Database.MigrateAsync();
+    await identityDbContext.Database.OpenConnectionAsync();
+    await identityDbContext.Database.ExecuteSqlRawAsync("CREATE SCHEMA IF NOT EXISTS public");
+    await identityDbContext.Database.ExecuteSqlRawAsync("CREATE SCHEMA IF NOT EXISTS \"Identity\"");
+
     await identityDbContext.Database.MigrateAsync();
+    await appDbContext.Database.MigrateAsync();
     await seeder.SeedAdminAsync();
 
     Console.WriteLine("Database migrations and admin seeding completed successfully.");

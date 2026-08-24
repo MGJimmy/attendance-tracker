@@ -7,17 +7,26 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AttendanceTracker.Migrations
 {
     /// <inheritdoc />
-    public partial class addAttendance : Migration
+    public partial class InitialAttendance : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsActive",
-                table: "Employees",
-                type: "boolean",
-                nullable: false,
-                defaultValue: false);
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    SalaryPerHour = table.Column<decimal>(type: "numeric", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "EmployeeAttendances",
@@ -45,6 +54,12 @@ namespace AttendanceTracker.Migrations
                 name: "IX_EmployeeAttendances_EmployeeId",
                 table: "EmployeeAttendances",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_UserId",
+                table: "Employees",
+                column: "UserId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -53,9 +68,8 @@ namespace AttendanceTracker.Migrations
             migrationBuilder.DropTable(
                 name: "EmployeeAttendances");
 
-            migrationBuilder.DropColumn(
-                name: "IsActive",
-                table: "Employees");
+            migrationBuilder.DropTable(
+                name: "Employees");
         }
     }
 }

@@ -32,14 +32,14 @@
         </td>
       </ng-container>
 
-      <!-- Salary -->
-      <ng-container matColumnDef="salary">
+      <!-- Salary per hour -->
+      <ng-container matColumnDef="salaryPerHour">
         <th mat-header-cell *matHeaderCellDef>
-          Salary
+          Salary / hour
         </th>
 
         <td mat-cell *matCellDef="let employee">
-          {{ employee.salary | number:'1.2-2' }}
+          {{ employee.salaryPerHour | number:'1.2-2' }}
         </td>
       </ng-container>
 

@@ -30,7 +30,7 @@ export class EmployeeListComponent implements OnInit {
 
   displayedColumns: string[] = [
     'name',
-    'salary',
+    'salaryPerHour',
     'status',
     'actions'
   ];
