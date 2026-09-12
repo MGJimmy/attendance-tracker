@@ -83,4 +83,15 @@ public class UsersController : ControllerBase
 
         return Ok(new { message = "User deactivated successfully." });
     }
+
+    [HttpPost("{id}/password")]
+    public async Task<IActionResult> ChangePassword(string id, [FromBody] ChangePasswordCommand command)
+    {
+        command.UserId = id;
+        var result = await _mediator.Send(command);
+        if (!result.Success)
+            return BadRequest(result.ErrorMessage);
+
+        return Ok(new { message = "Password updated successfully." });
+    }
 }

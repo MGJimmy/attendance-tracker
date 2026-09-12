@@ -4,10 +4,12 @@ import { Router } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 
 import { UserDto, UserService } from '../../../core/services/user.service';
+import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 
 @Component({
   selector: 'app-user-list',
@@ -17,7 +19,8 @@ import { UserDto, UserService } from '../../../core/services/user.service';
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
@@ -25,6 +28,7 @@ import { UserDto, UserService } from '../../../core/services/user.service';
 export class UserListComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
   users: UserDto[] = [];
 
@@ -50,6 +54,13 @@ export class UserListComponent implements OnInit {
 
   add(): void {
     this.router.navigate(['/users/create']);
+  }
+
+  editPassword(user: UserDto): void {
+    this.dialog.open(ChangePasswordDialogComponent, {
+      width: '480px',
+      data: user
+    });
   }
 
   roleLabel(user: UserDto): string {

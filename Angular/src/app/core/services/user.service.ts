@@ -57,4 +57,8 @@ export class UserService {
   deactivate(id: string): Observable<any> {
     return this.http.post(`${this.api}/deactivate/${id}`, {});
   }
+
+  changePassword(id: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.api}/${id}/password`, { newPassword });
+  }
 }

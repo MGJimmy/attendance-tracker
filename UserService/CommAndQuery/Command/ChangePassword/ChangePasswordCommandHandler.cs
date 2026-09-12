@@ -16,7 +16,10 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
         if (user is null)
-            return new ChangePasswordResponse { Success = false, ErrorMessage = "المستخدم غير موجود" };
+            return new ChangePasswordResponse { Success = false, ErrorMessage = "User not found." };
+
+        if (string.IsNullOrWhiteSpace(request.NewPassword))
+            return new ChangePasswordResponse { Success = false, ErrorMessage = "Password is required." };
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);

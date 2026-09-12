@@ -47,6 +47,13 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let user">
           <button
+            mat-icon-button
+            color="primary"
+            (click)="editPassword(user)">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button
             *ngIf="user.isActive"
             mat-icon-button
             color="warn"
